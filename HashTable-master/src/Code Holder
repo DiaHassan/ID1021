@@ -1,0 +1,51 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+public class Zip {
+    Node[] data;
+    int max;
+    public class Node {
+        int code;
+        String name;
+        Integer pop;
+
+        public Node (int cde, String nme, Integer pp){
+            code = cde;
+            name = nme;
+            pop = pp;
+        }
+    }
+    public Zip(String file) {
+        data = new Node[10000];
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                String[] row = line.split(",");
+                Integer code = Integer.valueOf(row[0].replaceAll("\\s",""));
+                data[i++] = new Node(code, row[1], Integer.valueOf(row[2]));
+            }
+            max = i-1;
+            System.out.println("Worked");
+        } catch (Exception e) {
+            System.out.println(" file " + file + " not found");
+        }
+    }
+
+    public Node lookup(int n){return data[n];}
+
+    public static int binary_search(Node[] data,int low, int high, int tbf){
+        if(high>low){
+            int mid = low +(high -1)/2;
+            if(data[mid].code ==tbf){
+                return mid;
+            }
+            if (data[mid].code > tbf){
+                return binary_search(data,low,mid-1,tbf);
+            } else {
+                return binary_search(data,mid+1,high,tbf);
+            }
+        }
+        return -1;
+    }
+}
